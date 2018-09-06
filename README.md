@@ -11,19 +11,19 @@ based on：org.tron.core.db.Manager#sendEventLog
 
 ## The Following are Four Methods for Polling:
 1. By Contract Address:<br>
-curl http://52.44.75.99:18889/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6
+curl http://trongrid.io:18891/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6
 <br>
 
 2. By Contract Address and Event Name:<br>
-curl http://52.44.75.99:18889/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6/Notify
+curl http://trongrid.io:18891/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6/Notify
 <br>
 
 3. By Contract Address, Event Name, and Block Height:<br>
-curl http://52.44.75.99:18889/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6/Notify/88
+curl http://trongrid.io:18891/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6/Notify/88
 <br>
 
 4. By Transaction ID:<br>
-curl http://52.44.75.99:18889/event/transaction/5c3747ffa94fc87a2188708a9e0758cbd01f000d3d01f6589651921930183f6a
+curl http://trongrid.io:18891/event/transaction/5c3747ffa94fc87a2188708a9e0758cbd01f000d3d01f6589651921930183f6a
 <br>
 
 An Example Contract:
