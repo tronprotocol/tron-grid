@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: org.tron.infura.InfuraApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.659 s - in org.tron.infura.InfuraApplicationTests

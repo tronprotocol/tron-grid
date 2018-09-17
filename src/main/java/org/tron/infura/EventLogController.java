@@ -44,4 +44,10 @@ public class EventLogController {
         .findByContractAddressAndEntryNameAndBlockNumber(contractAddress, eventName, blockNumber);
   }
 
+  @RequestMapping(method = RequestMethod.GET, value = "/event/timestamp/{timestamp}")
+  public Iterable<EventLogEntity> findByBlockTimestampGreaterThan(@PathVariable Long timestamp) {
+    System.out.println("--------------" + timestamp);
+    return eventLogRepository.findByBlockTimestampGreaterThan(timestamp);
+  }
+
 }
