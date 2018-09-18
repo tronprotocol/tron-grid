@@ -2,10 +2,14 @@ package org.tron.infura;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.PageRequest;
 
 @RestController
 public class EventLogController {
@@ -44,10 +48,25 @@ public class EventLogController {
         .findByContractAddressAndEntryNameAndBlockNumber(contractAddress, eventName, blockNumber);
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "/event/timestamp/{timestamp}")
-  public Iterable<EventLogEntity> findByBlockTimestampGreaterThan(@PathVariable Long timestamp) {
-    System.out.println("--------------" + timestamp);
-    return eventLogRepository.findByBlockTimestampGreaterThan(timestamp);
+  @RequestMapping(method = RequestMethod.GET, value = "/event/timestamp")
+  public List<EventLogEntity> findByBlockTimestampGreaterThan(
+          @RequestParam(value="since", required=false, defaultValue = "0" ) Long since_timestamp,
+          @RequestParam(value="candidate", required=false) String contract_address,
+          @RequestParam(value="page", required=false, defaultValue="0") int page,
+          @RequestParam(value="size", required=false, defaultValue="50") int page_size) {
+
+    if (contract_address == null || contract_address.length() == 0)
+      return eventLogRepository.findByBlockTimestampGreaterThan(since_timestamp, this.make_pagination(page,page_size,"block_timestamp"));
+
+    return eventLogRepository.findByBlockTimestampAndContractAddressGreaterThan(since_timestamp, contract_address, this.make_pagination(page,page_size,"block_timestamp"));
+
+
   }
+
+  private Pageable make_pagination(int page_num, int page_size, String sort_property){
+    return PageRequest.of(page_num, page_size, Sort.Direction.DESC, sort_property);
+  }
+
+
 
 }

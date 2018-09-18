@@ -1,9 +1,12 @@
 package org.tron.infura;
 
 import java.util.List;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-
+import org.springframework.data.repository.query.Param;
 
 public interface EventLogRepository extends MongoRepository<EventLogEntity, String> {
 
@@ -23,8 +26,11 @@ public interface EventLogRepository extends MongoRepository<EventLogEntity, Stri
   List<EventLogEntity> findByContractAddressAndEntryNameAndBlockNumber(String contractAddress,
       String entryName, Long blockNumber);
 
-  @Query("{ '$or' : [ {'block_timestamp' : ?0}, {'block_timestamp' : {$gt : ?0}} ]}")
-  // return all event triggered after a certain timestamp
-  List<EventLogEntity> findByBlockTimestampGreaterThan(Long timestamp);
+  @Query("{ '$or' : [ {'block_timestamp' : ?0}, {'block_timestamp' : {$gt : ?0}} ] }")
+    // return all event triggered after a certain timestamp
+  List<EventLogEntity> findByBlockTimestampGreaterThan(Long timestamp,  Pageable pageable);
+
+  @Query("{ '$or' : [ {'block_timestamp' : ?0}, {'block_timestamp' : {$gt : ?0}} ], 'contract_address' : ?1}")
+  List<EventLogEntity> findByBlockTimestampAndContractAddressGreaterThan(Long timestamp, String contract_address, Pageable pageable);
 
 }
