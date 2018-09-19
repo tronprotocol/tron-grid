@@ -91,5 +91,5 @@ mvn package
 ## Run
 ```
 cd target
-nohup java -jar infura-0.0.1-SNAPSHOT.jar &
+nohup java -jar trongrid-0.0.1-SNAPSHOT.jar &
 ```
