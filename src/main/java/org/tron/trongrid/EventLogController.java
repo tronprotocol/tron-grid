@@ -19,7 +19,9 @@ public class EventLogController {
 
   @RequestMapping(method = RequestMethod.GET, value = "/events")
   public Iterable<EventLogEntity> events() {
-    return eventLogRepository.findAll();
+    // hard code for now, gonna change later
+    return eventLogRepository.findByBlockTimestampGreaterThan((long)0, this.make_pagination(0,100,"block_timestamp"));
+
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/transaction/{transactionId}")
