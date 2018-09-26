@@ -1,6 +1,7 @@
 package org.tron.trongrid;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import org.springframework.data.annotation.Id;
@@ -33,14 +34,15 @@ public class EventLogEntity implements Serializable {
 
   @Field(value = "result")
   @JsonProperty(value = "result")
-  private JSONArray resultJsonArray;
+  private Object resultJsonArray;
+
 
   @Field(value = "transaction_id")
   @JsonProperty(value = "transaction_id")
   private String transactionId;
 
   public EventLogEntity(long blockNumber, long blockTimestamp, String contractAddress,
-      String entryName, JSONArray resultJsonArray, String transactionId) {
+      String entryName, Object resultJsonArray, String transactionId) {
     this.blockNumber = blockNumber;
     this.blockTimestamp = blockTimestamp;
     this.contractAddress = contractAddress;
@@ -85,11 +87,11 @@ public class EventLogEntity implements Serializable {
     this.entryName = entryName;
   }
 
-  public JSONArray getResultJsonArray() {
+  public Object getResultJsonArray() {
     return resultJsonArray;
   }
 
-  public void setResultJsonArray(JSONArray resultJsonArray) {
+  public void setResultJsonArray(Object resultJsonArray) {
     this.resultJsonArray = resultJsonArray;
   }
 
