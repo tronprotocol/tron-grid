@@ -19,9 +19,7 @@ public class EventLogController {
 
   @RequestMapping(method = RequestMethod.GET, value = "/events")
   public Iterable<EventLogEntity> events() {
-    // hard code for now, gonna change later
     return eventLogRepository.findByBlockTimestampGreaterThan((long)0, this.make_pagination(0,100,"block_timestamp"));
-
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/transaction/{transactionId}")
@@ -42,18 +40,26 @@ public class EventLogController {
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/contract/{contractAddress}/{eventName}/{blockNumber}")
-  public Iterable<EventLogEntity> findByContractAddressAndEntryNameAndBlockNumber(
+  public List<EventLogEntity> findByContractAddressAndEntryNameAndBlockNumber(
       @PathVariable String contractAddress,
       @PathVariable String eventName,
-      @PathVariable Long blockNumber) {
-    return eventLogRepository
-        .findByContractAddressAndEntryNameAndBlockNumber(contractAddress, eventName, blockNumber);
+      @PathVariable Long blockNumber,
+      @RequestParam(value="since", required=false, defaultValue = "0" ) Long timestamp,
+      @RequestParam(value="size", required=false, defaultValue="100") int page_size) {
+
+
+      return eventLogRepository.findByContractAndEventSinceTimestamp(contractAddress,
+                                                                      eventName,
+                                                                      timestamp,
+              this.make_pagination(0,page_size,"block_timestamp"));
+
+
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/timestamp")
   public List<EventLogEntity> findByBlockTimestampGreaterThan(
           @RequestParam(value="since", required=false, defaultValue = "0" ) Long since_timestamp,
-          @RequestParam(value="candidate", required=false) String contract_address,
+          @RequestParam(value="contract", required=false) String contract_address,
           @RequestParam(value="page", required=false, defaultValue="0") int page,
           @RequestParam(value="size", required=false, defaultValue="50") int page_size) {
 
