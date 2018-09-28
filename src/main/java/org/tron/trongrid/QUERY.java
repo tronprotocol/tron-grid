@@ -6,4 +6,6 @@ public class QUERY {
             "'event_name': ?1,  " +
             "'$or' : [ {'block_timestamp' : ?2}, {'block_timestamp' : {$gt : ?2}} ] " +
             "}";
+
+
 }

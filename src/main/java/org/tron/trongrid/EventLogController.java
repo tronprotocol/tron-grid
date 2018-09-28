@@ -33,26 +33,27 @@ public class EventLogController {
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/contract/{contractAddress}/{eventName}")
-  public Iterable<EventLogEntity> findByContractAddressAndEntryName(
-      @PathVariable String contractAddress,
-      @PathVariable String eventName) {
-    return eventLogRepository.findByContractAddressAndEntryName(contractAddress, eventName);
+  public List<EventLogEntity> findByContractAddressAndEntryNameAndBlockNumber(
+          @PathVariable String contractAddress,
+          @PathVariable String eventName,
+          @RequestParam(value="since", required=false, defaultValue = "0" ) Long timestamp,
+          @RequestParam(value="size", required=false, defaultValue="100") int page_size) {
+
+
+    return eventLogRepository.findByContractAndEventSinceTimestamp(contractAddress,
+            eventName,
+            timestamp,
+            this.make_pagination(0, page_size, "block_timestamp"));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/contract/{contractAddress}/{eventName}/{blockNumber}")
   public List<EventLogEntity> findByContractAddressAndEntryNameAndBlockNumber(
       @PathVariable String contractAddress,
       @PathVariable String eventName,
-      @PathVariable Long blockNumber,
-      @RequestParam(value="since", required=false, defaultValue = "0" ) Long timestamp,
-      @RequestParam(value="size", required=false, defaultValue="100") int page_size) {
+      @PathVariable Long blockNumber) {
 
-
-      return eventLogRepository.findByContractAndEventSinceTimestamp(contractAddress,
-                                                                      eventName,
-                                                                      timestamp,
-              this.make_pagination(0,page_size,"block_timestamp"));
-
+    return eventLogRepository
+            .findByContractAddressAndEntryNameAndBlockNumber(contractAddress, eventName, blockNumber);
 
   }
 
