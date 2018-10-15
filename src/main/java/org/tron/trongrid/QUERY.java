@@ -7,5 +7,9 @@ public class QUERY {
             "'$or' : [ {'block_timestamp' : ?2}, {'block_timestamp' : {$gt : ?2}} ] " +
             "}";
 
+    public static final String findByContractSinceTimeStamp = "{ 'contract_address' : ?0, " +
+            "'$or' : [ {'block_timestamp' : ?1}, {'block_timestamp' : {$gt : ?1}} ] " +
+            "}";
+
 
 }

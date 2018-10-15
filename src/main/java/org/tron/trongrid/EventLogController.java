@@ -1,25 +1,36 @@
 package org.tron.trongrid;
 
 import java.util.List;
+import java.util.Map;
+
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.data.domain.PageRequest;
-
+import org.springframework.ui.ModelMap;
+import org.springframework.data.mongodb.core.MongoTemplate;
 @RestController
 public class EventLogController {
 
   @Autowired
   EventLogRepository eventLogRepository;
+  @Autowired
+  MongoTemplate mongoTemplate;
 
   @RequestMapping(method = RequestMethod.GET, value = "/events")
-  public Iterable<EventLogEntity> events() {
-    return eventLogRepository.findByBlockTimestampGreaterThan((long)0, this.make_pagination(0,100,"block_timestamp"));
+  public List<EventLogEntity> events(
+          @RequestParam(value="since", required=false, defaultValue = "0" ) Long timestamp,
+          @RequestParam(value="page", required=false, defaultValue="1") int page,
+          @RequestParam(value="size", required=false, defaultValue="100") int page_size) {
+    return eventLogRepository.findByBlockTimestampGreaterThan(timestamp, this.make_pagination(Math.max(0,page-1),page_size,"block_timestamp"));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/transaction/{transactionId}")
@@ -28,22 +39,28 @@ public class EventLogController {
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/contract/{contractAddress}")
-  public Iterable<EventLogEntity> findByContractAddress(@PathVariable String contractAddress) {
-    return eventLogRepository.findByContractAddress(contractAddress);
+  public List<EventLogEntity> findByContractAddress(@PathVariable String contractAddress,
+                                                    @RequestParam(value="since", required=false, defaultValue = "0" ) Long timestamp,
+                                                    @RequestParam(value="page", required=false, defaultValue="1") int page,
+                                                    @RequestParam(value="size", required=false, defaultValue="100") int page_size) {
+    return eventLogRepository.findByContractSinceTimestamp(contractAddress,
+            timestamp,
+            this.make_pagination(Math.max(0,page-1), page_size, "block_timestamp"));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/contract/{contractAddress}/{eventName}")
-  public List<EventLogEntity> findByContractAddressAndEntryNameAndBlockNumber(
+  public List<EventLogEntity> findByContractAddressAndEntryName(
           @PathVariable String contractAddress,
           @PathVariable String eventName,
           @RequestParam(value="since", required=false, defaultValue = "0" ) Long timestamp,
+          @RequestParam(value="page", required=false, defaultValue="1") int page,
           @RequestParam(value="size", required=false, defaultValue="100") int page_size) {
 
 
     return eventLogRepository.findByContractAndEventSinceTimestamp(contractAddress,
             eventName,
             timestamp,
-            this.make_pagination(0, page_size, "block_timestamp"));
+            this.make_pagination(Math.max(0,page-1), page_size, "block_timestamp"));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/contract/{contractAddress}/{eventName}/{blockNumber}")
@@ -61,20 +78,29 @@ public class EventLogController {
   public List<EventLogEntity> findByBlockTimestampGreaterThan(
           @RequestParam(value="since", required=false, defaultValue = "0" ) Long since_timestamp,
           @RequestParam(value="contract", required=false) String contract_address,
-          @RequestParam(value="page", required=false, defaultValue="0") int page,
+          @RequestParam(value="page", required=false, defaultValue="1") int page,
           @RequestParam(value="size", required=false, defaultValue="50") int page_size) {
 
     if (contract_address == null || contract_address.length() == 0)
-      return eventLogRepository.findByBlockTimestampGreaterThan(since_timestamp, this.make_pagination(page,page_size,"block_timestamp"));
+      return eventLogRepository.findByBlockTimestampGreaterThan(since_timestamp, this.make_pagination(Math.max(0,page-1),page_size,"block_timestamp"));
 
-    return eventLogRepository.findByBlockTimestampAndContractAddressGreaterThan(since_timestamp, contract_address, this.make_pagination(page,page_size,"block_timestamp"));
+    return eventLogRepository.findByBlockTimestampAndContractAddressGreaterThan(since_timestamp, contract_address, this.make_pagination(Math.max(0,page-1),page_size,"block_timestamp"));
 
+  }
 
+  @RequestMapping(method = RequestMethod.GET, value = "/event/result/filter")
+  public List<EventLogEntity> filterevent(
+          @RequestParam Map<String,String> allRequestParams, ModelMap model){
+    Query query = new Query();
+    query.addCriteria(Criteria.where("result._value").is("9"));
+    List<EventLogEntity> result = mongoTemplate.find(query,EventLogEntity.class);
+    return result;
   }
 
   private Pageable make_pagination(int page_num, int page_size, String sort_property){
     return PageRequest.of(page_num, page_size, Sort.Direction.DESC, sort_property);
   }
+
 
 
 

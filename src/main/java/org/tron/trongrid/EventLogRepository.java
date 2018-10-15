@@ -24,6 +24,11 @@ public interface EventLogRepository extends MongoRepository<EventLogEntity, Stri
   List<EventLogEntity> findByContractAddressAndEntryNameAndBlockNumber(String contractAddress,
       String entryName, Long blockNumber);
 
+  /***************** with pagniate ***********************/
+
+  @Query(QUERY.findByContractSinceTimeStamp)
+  List<EventLogEntity> findByContractSinceTimestamp(String contractAddress, Long timestamp, Pageable pageable);
+
   @Query(QUERY.findByContractAndEventSinceTimestamp)
   List<EventLogEntity> findByContractAndEventSinceTimestamp(String contractAddress, String eventName, Long timestamp, Pageable pageable);
 
