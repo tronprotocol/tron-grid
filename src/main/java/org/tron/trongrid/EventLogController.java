@@ -43,9 +43,8 @@ public class EventLogController {
                                                     @RequestParam(value="since", required=false, defaultValue = "0" ) Long timestamp,
                                                     @RequestParam(value="page", required=false, defaultValue="1") int page,
                                                     @RequestParam(value="size", required=false, defaultValue="100") int page_size) {
-    return eventLogRepository.findByContractSinceTimestamp(contractAddress,
-            timestamp,
-            this.make_pagination(Math.max(0,page-1), page_size, "block_timestamp"));
+    return eventLogRepository.findByBlockTimestampAndContractAddressGreaterThan(timestamp, contractAddress,
+            this.make_pagination(Math.max(0,page-1),page_size,"block_timestamp"));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/contract/{contractAddress}/{eventName}")
