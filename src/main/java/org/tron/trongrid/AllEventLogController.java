@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.ui.ModelMap;
 import org.springframework.data.mongodb.core.MongoTemplate;
+
 @RestController
-public class EventLogController {
+public class AllEventLogController {
 
   @Autowired
   EventLogRepository eventLogRepository;
@@ -87,14 +88,14 @@ public class EventLogController {
 
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "/event/result/filter")
-  public List<EventLogEntity> filterevent(
-          @RequestParam Map<String,String> allRequestParams, ModelMap model){
-    Query query = new Query();
-    query.addCriteria(Criteria.where("result._value").is("9"));
-    List<EventLogEntity> result = mongoTemplate.find(query,EventLogEntity.class);
-    return result;
-  }
+//  @RequestMapping(method = RequestMethod.GET, value = "/event/result/filter")
+//  public List<EventLogEntity> filterevent(
+//          @RequestParam Map<String,String> allRequestParams, ModelMap model){
+//    Query query = new Query();
+//    query.addCriteria(Criteria.where("result._value").is("9"));
+//    List<EventLogEntity> result = mongoTemplate.find(query,EventLogEntity.class);
+//    return result;
+//  }
 
   private Pageable make_pagination(int page_num, int page_size, String sort_property){
     return PageRequest.of(page_num, page_size, Sort.Direction.DESC, sort_property);

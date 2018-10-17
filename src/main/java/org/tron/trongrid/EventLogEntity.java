@@ -28,6 +28,10 @@ public class EventLogEntity implements Serializable {
   @JsonProperty(value = "contract_address")
   private String contractAddress;
 
+  @Field(value="event_index")
+  @JsonProperty(value="event_index")
+  private int eventIndex;
+
   @Field(value = "event_name")
   @JsonProperty(value = "event_name")
   private String entryName;
@@ -36,20 +40,43 @@ public class EventLogEntity implements Serializable {
   @JsonProperty(value = "result")
   private Object resultJsonArray;
 
+  @Field(value = "result_type")
+  @JsonProperty(value = "result_type")
+  private JSONObject resultType;
 
   @Field(value = "transaction_id")
   @JsonProperty(value = "transaction_id")
   private String transactionId;
 
-  public EventLogEntity(long blockNumber, long blockTimestamp, String contractAddress,
-      String entryName, Object resultJsonArray, String transactionId) {
+  @Field(value = "resource_Node")
+  @JsonProperty(value = "resource_Node")
+  private String resource;
+
+
+
+  public EventLogEntity(long blockNumber, long blockTimestamp, String contractAddress, int eventIndex,
+                           String entryName, Object resultJsonArray,String transactionId, JSONObject resultType, String resource
+                        ) {
     this.blockNumber = blockNumber;
     this.blockTimestamp = blockTimestamp;
     this.contractAddress = contractAddress;
     this.entryName = entryName;
     this.resultJsonArray = resultJsonArray;
     this.transactionId = transactionId;
+    this.resultType = resultType;
+    this.resource = resource;
+    this.eventIndex = eventIndex;
   }
+
+//  public EventLogEntity(long blockNumber, long blockTimestamp, String contractAddress,
+//                        String entryName, Object resultJsonArray,String transactionId) {
+//    this.blockNumber = blockNumber;
+//    this.blockTimestamp = blockTimestamp;
+//    this.contractAddress = contractAddress;
+//    this.entryName = entryName;
+//    this.resultJsonArray = resultJsonArray;
+//    this.transactionId = transactionId;
+//  }
 
   public static long getSerialVersionUID() {
     return serialVersionUID;
@@ -102,4 +129,16 @@ public class EventLogEntity implements Serializable {
   public void setTransactionId(String transactionId) {
     this.transactionId = transactionId;
   }
+
+  public void setResultType(JSONObject res) { this.resultType = res; }
+
+  public JSONObject getResultType() { return this.resultType; }
+
+  public void setResource(String resource) { this.resource = resource; }
+
+  public String getResource(){return this.resource;}
+
+  public void setEventIndex(int idx){this.eventIndex = idx;}
+
+  public int getEventIndex(){return this.eventIndex;}
 }
