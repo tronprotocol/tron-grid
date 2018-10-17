@@ -19,7 +19,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 @RestController
-public class AllEventLogController {
+public class EventLogController {
 
   @Autowired
   EventLogRepository eventLogRepository;
@@ -55,7 +55,6 @@ public class AllEventLogController {
           @RequestParam(value="since", required=false, defaultValue = "0" ) Long timestamp,
           @RequestParam(value="page", required=false, defaultValue="1") int page,
           @RequestParam(value="size", required=false, defaultValue="100") int page_size) {
-
 
     return eventLogRepository.findByContractAndEventSinceTimestamp(contractAddress,
             eventName,

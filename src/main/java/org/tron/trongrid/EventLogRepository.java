@@ -11,16 +11,16 @@ public interface EventLogRepository extends MongoRepository<EventLogEntity, Stri
   @Override
   List<EventLogEntity> findAll();
 
-  @Query("{ 'transaction_id' : ?0, 'resource_Node' : 'FullNode' }")
+  @Query("{ 'transaction_id' : ?0, 'resource_Node' : {$exists : true} }")
   List<EventLogEntity> findByTransactionId(String transactionId);
 
-  @Query("{'contract_address' : ?0, 'resource_Node' : 'FullNode' }")
+  @Query("{'contract_address' : ?0, 'resource_Node' : {$exists : true}}")
   List<EventLogEntity> findByContractAddress(String contractAddress);
 
-  @Query("{'contract_address' : ?0, 'event_name' : ?1, 'resource_Node' : 'FullNode' }")
+  @Query("{'contract_address' : ?0, 'event_name' : ?1, 'resource_Node' : {$exists : true} }")
   List<EventLogEntity> findByContractAddressAndEntryName(String contractAddress, String entryName);
 
-  @Query("{'contract_address' : ?0, 'event_name': ?1, 'block_number' : ?2, 'resource_Node' : 'FullNode' }")
+  @Query("{'contract_address' : ?0, 'event_name': ?1, 'block_number' : ?2, 'resource_Node' : {$exists : true} }")
   List<EventLogEntity> findByContractAddressAndEntryNameAndBlockNumber(String contractAddress,
       String entryName, Long blockNumber);
 
@@ -28,11 +28,11 @@ public interface EventLogRepository extends MongoRepository<EventLogEntity, Stri
   @Query(QUERY.findByContractAndEventSinceTimestamp)
   List<EventLogEntity> findByContractAndEventSinceTimestamp(String contractAddress, String eventName, Long timestamp, Pageable pageable);
 
-  @Query("{ '$or' : [ {'block_timestamp' : ?0}, {'block_timestamp' : {$gt : ?0}} ], 'resource_Node' : 'FullNode' }")
+  @Query("{ '$or' : [ {'block_timestamp' : ?0}, {'block_timestamp' : {$gt : ?0}} ], 'resource_Node' : {$exists : true} }")
     // return all event triggered after a certain timestamp
   List<EventLogEntity> findByBlockTimestampGreaterThan(Long timestamp,  Pageable pageable);
 
-  @Query("{ '$or' : [ {'block_timestamp' : ?0}, {'block_timestamp' : {$gt : ?0}} ], 'contract_address' : ?1, 'resource_Node' : 'FullNode'}")
+  @Query("{ '$or' : [ {'block_timestamp' : ?0}, {'block_timestamp' : {$gt : ?0}} ], 'contract_address' : ?1, 'resource_Node' : {$exists : true}}")
   List<EventLogEntity> findByBlockTimestampAndContractAddressGreaterThan(Long timestamp, String contract_address, Pageable pageable);
 
 }
