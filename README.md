@@ -11,11 +11,28 @@ based on：org.tron.core.db.Manager#sendEventLog
 
 ## The Following are Four Methods for Polling:
 1. By Contract Address:<br>
-curl https://api.trongrid.io/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6
+curl https://api.shasta.trongrid.io/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6
+or
+curl https://api.shasta.trongrid.io/event/timestamp?contract=TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6
+
+By default, its gonna return the latest 50 events. If you want to return the latest event:
+curl https://api.shasta.trongrid.io/event/timestamp?contract=TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6&size=1 or
+curl https://api.shasta.trongrid.io/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6?size=1
+
+if you want to return the second latest event, 
+curl https://api.shasta.trongrid.io/event/timestamp?contract=TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6&size=1&page=2 or
+curl https://api.shasta.trongrid.io/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6?size=1&page=2
 <br>
 
 2. By Contract Address and Event Name:<br>
 curl https://api.trongrid.io/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6/Notify
+
+to retrieve the latest event of the contract:
+curl https://api.trongrid.io/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6/Notify?size=1
+
+to retrieve the second latest event of the contract:
+curl https://api.trongrid.io/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6/Notify?size=1&page=2
+
 <br>
 
 3. By Contract Address, Event Name, and Block Height:<br>
