@@ -14,30 +14,22 @@ based on：org.tron.core.db.Manager#sendEventLog
     curl https://api.shasta.trongrid.io/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6<br>
     or<br>
     curl https://api.shasta.trongrid.io/event/timestamp?contract=TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6<br>
-<br>
     By default, its gonna return the latest 50 events. If you want to return the latest event:<br>
     curl https://api.shasta.trongrid.io/event/timestamp?contract=TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6&size=1 or<br>
     curl https://api.shasta.trongrid.io/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6?size=1<br>
-<br>
     if you want to return the second latest event, <br>
     curl https://api.shasta.trongrid.io/event/timestamp?contract=TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6&size=1&page=2 or<br>
     curl https://api.shasta.trongrid.io/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6?size=1&page=2<br>
 <br>
-
 2.  By Contract Address and Event Name:<br>
     curl https://api.trongrid.io/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6/Notify<br>
-<br>
     to retrieve the latest event of the contract:<br>
     curl https://api.trongrid.io/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6/Notify?size=1<br>
-
     to retrieve the second latest event of the contract:<br>
     curl https://api.trongrid.io/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6/Notify?size=1&page=2<br>
-
 <br>
-
 3.  By Contract Address, Event Name, and Block Height:<br>
     curl https://api.trongrid.io/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6/Notify/88<br>
-<br>
 
 4.  By Transaction ID:<br>
     curl https://api.trongrid.io/event/transaction/5c3747ffa94fc87a2188708a9e0758cbd01f000d3d01f6589651921930183f6a<br>
