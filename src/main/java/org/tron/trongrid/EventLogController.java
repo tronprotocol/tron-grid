@@ -103,12 +103,19 @@ public class EventLogController {
           @RequestParam(value="page", required=false, defaultValue="1") int page,
           @RequestParam(value="size", required=false, defaultValue="20") int page_size){
 
+    if (allRequestParams.get("result") == null || allRequestParams.get("result").length() == 0){
+      return eventLogRepository.findByContractAndEventSinceTimestamp(contractAddress,
+              eventName,
+              since_timestamp,
+              QUERY.make_pagination(Math.max(0,page-1),Math.min(200,page_size),"block_timestamp"));
+    }
+
     Query query = new Query();
     query.addCriteria(Criteria.where("contract_address").is(contractAddress));
     query.addCriteria(Criteria.where("event_name").is(eventName));
     query.addCriteria((Criteria.where("block_timestamp").gte(since_timestamp)));
-    JSONObject res = JSONObject.parseObject(allRequestParams.get("result"));
 
+    JSONObject res = JSONObject.parseObject(allRequestParams.get("result"));
     for(String k : res.keySet()){
       if(QUERY.isBool(res.getString(k))){
         query.addCriteria(Criteria.where(String.format("%s.%s","result",k)).is(Boolean.parseBoolean(res.getString(k))));
