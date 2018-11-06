@@ -133,10 +133,17 @@ public class EventLogController {
   private void setPagniateVariable(HttpServletRequest request){
     if (request.getParameter("page") != null && request.getParameter("page").length() > 0)
       this.page = Integer.parseInt(request.getParameter("page"));
+    else
+      this.page = 0;
     if (request.getParameter("size") != null && request.getParameter("size").length() > 0)
       this.page_size = Integer.parseInt(request.getParameter("size"));
+    else
+      this.page_size = 20;
     if (request.getParameter("since") != null && request.getParameter("since").length() > 0)
       this.timestamp = Long.parseLong(request.getParameter("since"));
+    else
+      this.timestamp = 0;
+
   }
 
 }
