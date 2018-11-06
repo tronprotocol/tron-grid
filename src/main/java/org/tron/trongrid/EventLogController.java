@@ -27,7 +27,6 @@ public class EventLogController {
   private long timestamp = 0;
   private int page = 0;
   private int page_size = 20;
-  private String sort = "-block_timestamp";
 
   @RequestMapping(method = RequestMethod.GET, value = "/healthcheck")
   public String  healthCheck(){
