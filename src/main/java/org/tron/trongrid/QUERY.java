@@ -20,5 +20,9 @@ public class QUERY {
         return PageRequest.of(page_num, page_size, Sort.Direction.DESC, sort_property);
     }
 
+    public static boolean isBool(String s) {
+        return s.equalsIgnoreCase("true") || s.equalsIgnoreCase("false");
+    }
+
 
 }
