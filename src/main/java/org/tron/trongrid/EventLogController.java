@@ -132,20 +132,4 @@ public class EventLogController {
       this.timestamp = Long.parseLong(request.getParameter("since"));
   }
 
-//  @RequestMapping(method = RequestMethod.GET, value = "/offset")
-//  public List<EventLogEntity> offset_test(
-//          @RequestParam(value="since", required=false, defaultValue = "0" ) Long timestamp,
-//          @RequestParam(value="page", required=false, defaultValue="1") int page,
-//          @RequestParam(value="size", required=false, defaultValue="20") int page_size) {
-//
-//    Query query = new Query();
-//    query.addCriteria(Criteria.where("resource_Node").exists(true));
-//
-//    return null;
-//  }
-
-
-
-
-
 }
