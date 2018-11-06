@@ -6,6 +6,7 @@ import java.util.Map;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.ui.ModelMap;
@@ -23,10 +24,6 @@ public class EventLogController {
   @Autowired
   MongoTemplate mongoTemplate;
 
-  // variables for pagniate
-  private long timestamp = 0;
-  private int page = 0;
-  private int page_size = 20;
 
   @RequestMapping(method = RequestMethod.GET, value = "/healthcheck")
   public String  healthCheck(){
@@ -35,10 +32,10 @@ public class EventLogController {
 
   @RequestMapping(method = RequestMethod.GET, value = "/events")
   public List<EventLogEntity> events(
+          @RequestParam(value="since", required=false, defaultValue = "0" ) Long timestamp,
           HttpServletRequest request) {
 
-    this.setPagniateVariable(request);
-    return eventLogRepository.findByBlockTimestampGreaterThan(this.timestamp, QUERY.make_pagination(Math.max(0,this.page-1),Math.min(200,this.page_size),"block_timestamp"));
+    return eventLogRepository.findByBlockTimestampGreaterThan(timestamp, this.setPagniateVariable(request));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/transaction/{transactionId}")
@@ -48,24 +45,24 @@ public class EventLogController {
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/contract/{contractAddress}")
   public List<EventLogEntity> findByContractAddress(@PathVariable String contractAddress,
+                                                    @RequestParam(value="since", required=false, defaultValue = "0" ) Long timestamp,
                                                     HttpServletRequest request) {
 
-    this.setPagniateVariable(request);
-    return eventLogRepository.findByBlockTimestampAndContractAddressGreaterThan(this.timestamp, contractAddress,
-            QUERY.make_pagination(Math.max(0,this.page-1),Math.min(200,this.page_size),"block_timestamp"));
+    return eventLogRepository.findByBlockTimestampAndContractAddressGreaterThan(timestamp, contractAddress,
+            this.setPagniateVariable(request));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/contract/{contractAddress}/{eventName}")
   public List<EventLogEntity> findByContractAddressAndEntryName(
           @PathVariable String contractAddress,
           @PathVariable String eventName,
+          @RequestParam(value="since", required=false, defaultValue = "0" ) Long timestamp,
           HttpServletRequest request) {
 
-    this.setPagniateVariable(request);
     return eventLogRepository.findByContractAndEventSinceTimestamp(contractAddress,
             eventName,
-            this.timestamp,
-            QUERY.make_pagination(Math.max(0,this.page-1),Math.min(200,this.page_size),"block_timestamp"));
+            timestamp,
+            this.setPagniateVariable(request));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/contract/{contractAddress}/{eventName}/{blockNumber}")
@@ -82,14 +79,15 @@ public class EventLogController {
   @RequestMapping(method = RequestMethod.GET, value = "/event/timestamp")
   public List<EventLogEntity> findByBlockTimestampGreaterThan(
           @RequestParam(value="contract", required=false) String contract_address,
+          @RequestParam(value="since", required=false, defaultValue = "0" ) Long timestamp,
           HttpServletRequest request) {
 
     this.setPagniateVariable(request);
 
     if (contract_address == null || contract_address.length() == 0)
-      return eventLogRepository.findByBlockTimestampGreaterThan(this.timestamp, QUERY.make_pagination(Math.max(0,this.page-1),Math.min(200,this.page_size),"block_timestamp"));
+      return eventLogRepository.findByBlockTimestampGreaterThan(timestamp, this.setPagniateVariable(request));
 
-    return eventLogRepository.findByBlockTimestampAndContractAddressGreaterThan(this.timestamp, contract_address, QUERY.make_pagination(Math.max(0,this.page-1),Math.min(200,this.page_size),"block_timestamp"));
+    return eventLogRepository.findByBlockTimestampAndContractAddressGreaterThan(timestamp, contract_address, this.setPagniateVariable(request));
 
   }
 
@@ -130,19 +128,23 @@ public class EventLogController {
     return result;
   }
 
-  private void setPagniateVariable(HttpServletRequest request){
+  private Pageable setPagniateVariable(HttpServletRequest request){
+
+    // variables for pagniate
+    int page = 0;
+    int page_size = 20;
+
     if (request.getParameter("page") != null && request.getParameter("page").length() > 0)
-      this.page = Integer.parseInt(request.getParameter("page"));
+      page = Integer.parseInt(request.getParameter("page"));
     else
-      this.page = 0;
+      page = 0;
     if (request.getParameter("size") != null && request.getParameter("size").length() > 0)
-      this.page_size = Integer.parseInt(request.getParameter("size"));
+      page_size = Integer.parseInt(request.getParameter("size"));
     else
-      this.page_size = 20;
-    if (request.getParameter("since") != null && request.getParameter("since").length() > 0)
-      this.timestamp = Long.parseLong(request.getParameter("since"));
-    else
-      this.timestamp = 0;
+      page_size = 20;
+
+
+    return QUERY.make_pagination(Math.max(0,page-1),Math.min(200,page_size),"block_timestamp");
 
   }
 
