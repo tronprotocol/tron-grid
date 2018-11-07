@@ -3,16 +3,14 @@ package org.tron.trongrid;
 import java.util.List;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.web.servlet.support.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,10 +30,16 @@ public class EventLogController {
 
   @RequestMapping(method = RequestMethod.GET, value = "/events")
   public List<EventLogEntity> events(
-          @RequestParam(value="since", required=false, defaultValue = "0" ) Long timestamp,
+          @RequestParam(value="since", required=false, defaultValue = "0" ) long timestamp,
+          @RequestParam(value="block", required=false, defaultValue = "-1" ) long blocknum,
           HttpServletRequest request) {
 
-    return eventLogRepository.findByBlockTimestampGreaterThan(timestamp, this.setPagniateVariable(request));
+    QueryFactory query = new QueryFactory(timestamp, blocknum);
+    query.setPageniate(this.setPagniateVariable(request));
+    System.out.println(query.toString());
+    List<EventLogEntity> result = mongoTemplate.find(query.getQuery(),EventLogEntity.class);
+    return result;
+
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/transaction/{transactionId}")
@@ -45,35 +49,97 @@ public class EventLogController {
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/contract/{contractAddress}")
   public List<EventLogEntity> findByContractAddress(@PathVariable String contractAddress,
-                                                    @RequestParam(value="since", required=false, defaultValue = "0" ) Long timestamp,
+                                                    @RequestParam(value="since", required=false, defaultValue = "0" ) long timestamp,
+                                                    @RequestParam(value="block", required=false, defaultValue = "-1" ) long blocknum,
                                                     HttpServletRequest request) {
-
-    return eventLogRepository.findByBlockTimestampAndContractAddressGreaterThan(timestamp, contractAddress,
-            this.setPagniateVariable(request));
+    QueryFactory query = new QueryFactory(timestamp, blocknum);
+    query.setContractAddress(contractAddress);
+    query.setPageniate(this.setPagniateVariable(request));
+    System.out.println(query.toString());
+    List<EventLogEntity> result = mongoTemplate.find(query.getQuery(),EventLogEntity.class);
+    return result;
+//    return eventLogRepository.findByBlockTimestampAndContractAddressGreaterThan(timestamp, contractAddress,
+//            this.setPagniateVariable(request));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/contract/{contractAddress}/{eventName}")
   public List<EventLogEntity> findByContractAddressAndEntryName(
           @PathVariable String contractAddress,
           @PathVariable String eventName,
-          @RequestParam(value="since", required=false, defaultValue = "0" ) Long timestamp,
+          @RequestParam(value="since", required=false, defaultValue = "0" ) long timestamp,
+          @RequestParam(value="block", required=false, defaultValue = "-1" ) long blocknum,
           HttpServletRequest request) {
 
-    return eventLogRepository.findByContractAndEventSinceTimestamp(contractAddress,
-            eventName,
-            timestamp,
-            this.setPagniateVariable(request));
+    QueryFactory query = new QueryFactory(timestamp, blocknum);
+    query.setContractAddress(contractAddress);
+    query.setEventName(eventName);
+    query.setPageniate(this.setPagniateVariable(request));
+    System.out.println(query.toString());
+    List<EventLogEntity> result = mongoTemplate.find(query.getQuery(),EventLogEntity.class);
+    return result;
+
+//    return eventLogRepository.findByContractAndEventSinceTimestamp(contractAddress,
+//            eventName,
+//            timestamp,
+//            this.setPagniateVariable(request));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/contract/{contractAddress}/{eventName}/{blockNumber}")
   public List<EventLogEntity> findByContractAddressAndEntryNameAndBlockNumber(
       @PathVariable String contractAddress,
       @PathVariable String eventName,
-      @PathVariable Long blockNumber) {
+      @PathVariable long blockNumber) {
 
-    return eventLogRepository
-            .findByContractAddressAndEntryNameAndBlockNumber(contractAddress, eventName, blockNumber);
+    QueryFactory query = new QueryFactory();
+    query.setContractAddress(contractAddress);
+    query.setEventName(eventName);
+    System.out.println(query.toString());
+    query.setBockNum(blockNumber);
+    List<EventLogEntity> result = mongoTemplate.find(query.getQuery(),EventLogEntity.class);
+    return result;
 
+//    return eventLogRepository
+//            .findByContractAddressAndEntryNameAndBlockNumber(contractAddress, eventName, blockNumber);
+
+  }
+
+  @RequestMapping(method = RequestMethod.GET, value = "/event/filter/contract/{contractAddress}/{eventName}")
+  public List<EventLogEntity> filterevent(
+          @RequestParam Map<String,String> allRequestParams,
+          @PathVariable String contractAddress,
+          @PathVariable String eventName,
+
+          @RequestParam(value="since", required=false, defaultValue = "0" ) Long since_timestamp,
+          @RequestParam(value="block", required=false, defaultValue = "-1" ) long blocknum,
+          HttpServletRequest request){
+
+    Query query = new Query();
+    query.addCriteria(Criteria.where("contract_address").is(contractAddress));
+    query.addCriteria(Criteria.where("event_name").is(eventName));
+    query.addCriteria((Criteria.where("block_timestamp").gte(since_timestamp)));
+
+    if (blocknum > 0)
+      query.addCriteria((Criteria.where("block_number").gte(blocknum)));
+
+    try {
+      JSONObject res = JSONObject.parseObject(allRequestParams.get("result"));
+      for (String k : res.keySet()) {
+        if (QueryFactory.isBool(res.getString(k))) {
+          query.addCriteria(Criteria.where(String.format("%s.%s", "result", k)).is(Boolean.parseBoolean(res.getString(k))));
+          continue;
+        }
+        query.addCriteria(Criteria.where(String.format("%s.%s", "result", k)).is((res.getString(k))));
+      }
+    } catch (JSONException e){
+
+    }catch (java.lang.NullPointerException e){
+
+    }
+
+    query.with(this.setPagniateVariable(request));
+    System.out.println(query.toString());
+    List<EventLogEntity> result = mongoTemplate.find(query,EventLogEntity.class);
+    return result;
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/event/timestamp")
@@ -91,48 +157,12 @@ public class EventLogController {
 
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "/event/filter/contract/{contractAddress}/{eventName}")
-  public List<EventLogEntity> filterevent(
-          @RequestParam Map<String,String> allRequestParams,
-          @PathVariable String contractAddress,
-          @PathVariable String eventName,
-
-          @RequestParam(value="since", required=false, defaultValue = "0" ) Long since_timestamp,
-          @RequestParam(value="page", required=false, defaultValue="1") int page,
-          @RequestParam(value="size", required=false, defaultValue="20") int page_size){
-
-    if (allRequestParams.get("result") == null || allRequestParams.get("result").length() == 0){
-      return eventLogRepository.findByContractAndEventSinceTimestamp(contractAddress,
-              eventName,
-              since_timestamp,
-              QUERY.make_pagination(Math.max(0,page-1),Math.min(200,page_size),"block_timestamp"));
-    }
-
-    Query query = new Query();
-    query.addCriteria(Criteria.where("contract_address").is(contractAddress));
-    query.addCriteria(Criteria.where("event_name").is(eventName));
-    query.addCriteria((Criteria.where("block_timestamp").gte(since_timestamp)));
-
-    JSONObject res = JSONObject.parseObject(allRequestParams.get("result"));
-    for(String k : res.keySet()){
-      if(QUERY.isBool(res.getString(k))){
-        query.addCriteria(Criteria.where(String.format("%s.%s","result",k)).is(Boolean.parseBoolean(res.getString(k))));
-        continue;
-      }
-        query.addCriteria(Criteria.where(String.format("%s.%s","result",k)).is((res.getString(k))));
-    }
-
-    query.with(QUERY.make_pagination(Math.max(0,page-1),page_size,"block_timestamp"));
-    System.out.println(query.toString());
-    List<EventLogEntity> result = mongoTemplate.find(query,EventLogEntity.class);
-    return result;
-  }
-
   private Pageable setPagniateVariable(HttpServletRequest request){
 
     // variables for pagniate
     int page = 0;
     int page_size = 20;
+    String sort = "-block_timestamp";
 
     if (request.getParameter("page") != null && request.getParameter("page").length() > 0)
       page = Integer.parseInt(request.getParameter("page"));
@@ -142,9 +172,12 @@ public class EventLogController {
       page_size = Integer.parseInt(request.getParameter("size"));
     else
       page_size = 20;
+    if (request.getParameter("sort") != null && request.getParameter("sort").length() > 0)
+      sort = request.getParameter("sort");
+    else
+      sort = "-block_timestamp";
 
-
-    return QUERY.make_pagination(Math.max(0,page-1),Math.min(200,page_size),"block_timestamp");
+    return QueryFactory.make_pagination(Math.max(0,page-1),Math.min(200,page_size),sort);
 
   }
 

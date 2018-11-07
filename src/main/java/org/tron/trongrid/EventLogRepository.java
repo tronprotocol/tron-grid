@@ -25,7 +25,7 @@ public interface EventLogRepository extends MongoRepository<EventLogEntity, Stri
       String entryName, Long blockNumber);
 
   /***************** with pagniate ***********************/
-  @Query(QUERY.findByContractAndEventSinceTimestamp)
+  @Query(QueryFactory.findByContractAndEventSinceTimestamp)
   List<EventLogEntity> findByContractAndEventSinceTimestamp(String contractAddress, String eventName, Long timestamp, Pageable pageable);
 
   @Query("{ '$or' : [ {'block_timestamp' : ?0}, {'block_timestamp' : {$gt : ?0}} ], 'resource_Node' : {$exists : true} }")
