@@ -32,6 +32,18 @@ based on：org.tron.core.db.Manager#sendEventLog
 curl https://api.trongrid.io/event/transaction/5c3747ffa94fc87a2188708a9e0758cbd01f000d3d01f6589651921930183f6a
 <br>
 
+## Request Parameters:<br>
+    since: set a time stamp, default 0, returning all events after that timestamp
+    EX: curl https://api.trongrid.io/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6/Notify?since=1541547888000
+    
+    size: number of results return. Default is 20, maximum is 200
+    EX: curl https://api.trongrid.io/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6/Notify?size=10
+    
+    page: page number
+    EX: curl https://api.trongrid.io/event/contract/TMJnJcHfdP5rhmXVkwRYb1a9A6gS46PUm6/Notify?size=10&page=2
+    gonna return latest 11 - 20th results
+    
+    sort: block_timestamp(Ascending order) or -block_timestamp(Descending order), sort result by block_timestamp
 An Example Contract:
 ```
 pragma solidity ^0.4.23;
