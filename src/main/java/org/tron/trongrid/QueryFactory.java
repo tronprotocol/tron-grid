@@ -76,5 +76,4 @@ public class QueryFactory {
 
     public Query getQuery() { return this.query; }
 
-
 }
