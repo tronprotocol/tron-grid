@@ -15,7 +15,7 @@ else
         break
       fi
     done
-    nohup java -jar target/trongrid-1.0.1-SNAPSHOT.jar 2> grid.log &
+    nohup java -jar target/trongrid-0.0.1-SNAPSHOT.jar 2> grid.log >/dev/null 2>&1 &
     sleep 10
     echo "ok!"
 fi
