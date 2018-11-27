@@ -4,7 +4,7 @@ Tron-Grid uses SpringBoot to provide a query interface. It takes Java-Tron and w
 
 ```
 https://github.com/tronprotocol/java-tron
-test_ev2分支
+event_parser branch
 based on：org.tron.core.db.Manager#sendEventLog
 ```
 
