@@ -1,6 +1,6 @@
 # Tron-Grid
 
-Tron-Grid uses SpringBoot to provide a query interface. It takes Java-Tron and writes event into Mongo DB. The user can poll the Smart Contract's details. Refer to the following link for Java Tron details:   
+Tron-Grid uses SpringBoot to provide a query interface. The user can poll the Smart Contract's details. Refer to the following link for Java Tron details:   
 
 ```
 https://github.com/tronprotocol/java-tron
