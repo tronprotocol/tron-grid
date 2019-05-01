@@ -1,9 +1,11 @@
+## THIS DOC REFERS TO THE LEGACY FORMAT.
+The API described in this readme still work for retro-compatibility, but they will be deprecated soon.
+Please refer to the official [README](https://github.com/tronprotocol/tron-grid/blob/master/README.md)
+
+##
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
 # TronGrid
-
-## THIS DOC REFER TO THE LEGACY FORMAT. IT STILL WORK FOR RETRO-COMPATIBILITY, BUT WILL BE DEPRECATED SOONER OR LATER. PLEASE REFER TO THE OFFICIAL [README](https://github.com/tronprotocol/tron-grid/blob/master/README.md)
-
-TronGrid v2 uses a set of NodeJS apps to talk with Redis and PostgreSQL to provide a simple, fast and reliable query interface for the Tron API.
-
 
 ## The Following are Four Methods for Polling:
 ### 1.  By Contract Address:<br>
