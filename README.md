@@ -1,5 +1,7 @@
 # TronGrid
 
+## THIS DOC REFER TO THE LEGACY FORMAT. IT STILL WORK FOR RETRO-COMPATIBILITY, BUT WILL BE DEPRECATED SOONER OR LATER. PLEASE REFER TO THE OFFICIAL [README](https://github.com/tronprotocol/tron-grid/blob/master/README.md)
+
 TronGrid v2 uses a set of NodeJS apps to talk with Redis and PostgreSQL to provide a simple, fast and reliable query interface for the Tron API.
 
 
