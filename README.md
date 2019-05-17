@@ -14,21 +14,21 @@ TronGrid v3 (TG3) will use api versioning moving forward. As this is the first i
 
 ### Endpoints
 
-    1. Accounts
-    2. Assets
-    3. Blocks
-    4. Contracts
-    5. Network
-    6. Proposals
-    7. Transactions
-    8. Witnesses
+1. Accounts
+2. Assets
+3. Blocks
+4. Contracts
+5. Network
+6. Proposals
+7. Transactions
+8. Witnesses
 
 ### Parameters, Queries, & Return Values
 
-    - Addresses in TG3 can be passed in base58 or hex formats.
-    - Query parameters can be passed in camelCase or snake_case.
-    - All returned JSON properties will be in snake_case (at the first level at least)
-    - **NB:** In this document, we will primarily use base58 and snake_case formats
+- Addresses in TG3 can be passed in base58 or hex formats.
+- Query parameters can be passed in camelCase or snake_case.
+- All returned JSON properties will be in snake_case (at the first level at least)
+- **NB:** In this document, we will primarily use base58 and snake_case formats
 
 ## APIs
 
