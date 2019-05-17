@@ -1,5 +1,3 @@
-TBh8rNhGN1eh22Mae7H7ma6Nh3ouyd3AF3
-
 # TronGrid
 
 TronGrid v3 (TG3) uses a set of NodeJS apps to talk with Redis and PostgreSQL to provide a simple, fast and reliable query interface for the Tron API.
