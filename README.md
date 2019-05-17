@@ -14,7 +14,7 @@ TronGrid v3 (TG3) will use api versioning moving forward. As this is the first i
 
 ### Endpoints
 
-1. Accounts
+1. [Accounts](#accounts)
 2. Assets
 3. Blocks
 4. Contracts
@@ -32,7 +32,7 @@ TronGrid v3 (TG3) will use api versioning moving forward. As this is the first i
 
 ## APIs
 
-### Accounts API
+### Accounts
 
 #### 1. Get Account Info By Address
 
@@ -198,7 +198,7 @@ TronGrid v3 (TG3) will use api versioning moving forward. As this is the first i
     `BANDWIDTH`
     `ENERGY`
   - `receiver_address`: Address of the account receiving the bandwidth/energy, if any (**optional**)
-- ex: https://api.trongrid.io/v1/accounts/:address/balances?action=
+- ex: https://api.trongrid.io/v1/accounts/:address/balances?action=freeze
 
 ## The Following are Four Methods for Polling:
 
