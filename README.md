@@ -198,7 +198,7 @@ TronGrid v3 (TG3) will use api versioning moving forward. As this is the first i
 
 #### 7. Withdraw Witnesses Rewards By Address
 
-- **POST** https://api.trongrid.io/v1/accounts/:address/witnesses
+- _POST_ https://api.trongrid.io/v1/accounts/:address/witnesses
 - JavaTron (JT) API: `/wallet/withdrawbalance`
 - Usage:
   - Creates a transaction to allow witnesses to receive their SR rewards. Can be used once/24 hrs.
